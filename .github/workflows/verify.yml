@@ -1,0 +1,23 @@
+name: Vérifier sans publier
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verifier:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+        working-directory: backend
+      - run: npm test
+        working-directory: backend
+      - run: npm ci
+        working-directory: frontend
+      - run: npm run build:web
+        working-directory: frontend
