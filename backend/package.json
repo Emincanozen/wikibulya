@@ -1,0 +1,33 @@
+{
+  "name": "wikibulya-backend",
+  "version": "1.0.0",
+  "description": "Backend API for WikiBulYa - Wikipedia title guessing game",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "test": "node --test"
+  },
+  "keywords": [
+    "wikibulya",
+    "game",
+    "wikipedia",
+    "word-guessing"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
