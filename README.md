@@ -1,21 +1,58 @@
+<div align="center">
+
+![WikiBulYa Banner](docs/screenshots/hero-banner.svg)
+
 # WikiBulYa 🎯
 
-[![Node.js](https://img.shields.io/badge/Node.js-22%2B-339933?style=flat&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
-[![Express.js](https://img.shields.io/badge/Express.js-4.21-000000?style=flat&logo=express&logoColor=white)](https://expressjs.com/)
-[![Expo](https://img.shields.io/badge/Expo-57.0-000020?style=flat&logo=expo&logoColor=white)](https://expo.dev/)
-[![React Native](https://img.shields.io/badge/React_Native-Web-61DAFB?style=flat&logo=react&logoColor=black)](https://necolas.github.io/react-native-web/)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=flat&logo=docker&logoColor=white)](https://www.docker.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=flat)](LICENSE)
+[![Node.js](https://img.shields.io/badge/Node.js-22%2B-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)](https://nodejs.org/)
+[![Express.js](https://img.shields.io/badge/Express.js-4.21-000000?style=for-the-badge&logo=express&logoColor=white)](https://expressjs.com/)
+[![Expo](https://img.shields.io/badge/Expo-57.0-000020?style=for-the-badge&logo=expo&logoColor=white)](https://expo.dev/)
+[![React Native](https://img.shields.io/badge/React_Native-Web-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://necolas.github.io/react-native-web/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-> **WikiBulYa** is an interactive word deduction and trivia guessing game inspired by Redactle and Contexto, built around Wikipedia article summaries. Players uncover redacted text blocks by submitting candidate words to deduce the hidden mystery article title.
+**An interactive word deduction and trivia guessing game inspired by Redactle and Contexto, built around Wikipedia article summaries.**
+
+[Overview](#overview) • [Live Demo](#live-demo) • [Screenshots](#screenshots) • [Key Highlights](#key-highlights--mechanics) • [Architecture](#architecture) • [Install & Configure](#how-to-install--configure) • [How to Use](#how-to-use) • [Create & Customize](#how-to-create--customize) • [API Reference](#api-reference) • [Verification](#verification--testing) • [License](#license)
+
+</div>
+
+---
+
+## Overview
+
+**WikiBulYa** challenges players to uncover redacted Wikipedia article summaries by submitting candidate words. Players start with 10,000 points, deduce hidden themes through vocabulary association, and unmask the mystery article title with minimal penalties.
+
+Features built-in Turkish diacritics and Unicode normalization, zero database requirement via an in-memory game engine, and a fully cross-platform React Native Web responsive interface.
+
+---
+
+## Live Demo
+
+<div align="center">
+
+![WikiBulYa Live Demo](docs/screenshots/demo.gif)
+
+*Submitting candidate words, instant unmasking of matched tokens, score deductions, and mobile responsive play.*
+
+</div>
 
 ---
 
 ## Screenshots
 
-| Desktop Web Interface | Mobile Responsive View |
-| :---: | :---: |
-| ![WikiBulYa Desktop Interface](docs/screenshots/01_desktop_interface.png) | ![WikiBulYa Mobile Layout](docs/screenshots/02_mobile_responsive.png) |
+<table width="100%">
+  <tr>
+    <td width="50%" align="center">
+      <b>Desktop Word Deduction Interface</b><br/><br/>
+      <img src="docs/screenshots/01_desktop_interface.webp" alt="Desktop Web Interface" width="100%"/>
+    </td>
+    <td width="50%" align="center">
+      <b>Mobile Responsive Guessing View</b><br/><br/>
+      <img src="docs/screenshots/02_mobile_responsive.webp" alt="Mobile Responsive View" width="100%"/>
+    </td>
+  </tr>
+</table>
 
 ---
 
@@ -26,6 +63,42 @@
 - **Score Calculation & Penalty:** Players start with 10,000 points. Correct guesses unmask matching tokens across the entire article, while incorrect guesses deduct 100 points. Duplicate guesses are idempotent and do not penalize twice.
 - **Lightweight Architecture:** Zero database requirement for standard single-player gameplay — the backend runs an in-memory game engine with automatic 24-hour session cleanup.
 - **Cross-Platform Delivery:** Runs anywhere via Expo and React Native Web (desktop browsers, iOS, Android, and mobile web).
+
+---
+
+## Architecture
+
+```mermaid
+flowchart TD
+    subgraph Client_Layer["Frontend Client (React Native Web & Expo SDK 57)"]
+        UI["App Interface (`frontend/src/App.js`)"]
+        Input["Candidate Word Input & Proposer"]
+        Card["Redacted Text Body (`█████████`)"]
+        Score["Live Score & Mistake Counter"]
+    end
+
+    subgraph Server_Layer["Backend API Service (Express.js 4.21 & Node.js 22)"]
+        Router["Game Route Handler (`backend/routes/gameRoutes.js`)"]
+        Engine["In-Memory Game Engine (`backend/game.js`)"]
+        Normalizer["Turkish Unicode & Diacritics Normalizer"]
+        Masker["Regex Token Masker (`masquerTexte`)"]
+        SessionStore["In-Memory Session Store<br/>(24h TTL Autocleanup)"]
+    end
+
+    subgraph External_API["Wikimedia Foundation"]
+        Wiki["Wikipedia REST API<br/>(`api/rest_v1/page/random/summary`)"]
+    end
+
+    UI --> Input
+    Input -->|POST /game/guess| Router
+    UI -->|GET /game/daily-text| Router
+    Router --> Wiki
+    Router --> Engine
+    Engine --> Normalizer
+    Engine --> Masker
+    Engine --> SessionStore
+    Router -->|Masked Text & Score Diff| Card & Score
+```
 
 ---
 
