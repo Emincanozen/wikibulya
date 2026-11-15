@@ -71,22 +71,22 @@ Features built-in Turkish diacritics and Unicode normalization, zero database re
 ```mermaid
 flowchart TD
     subgraph Client_Layer["Frontend Client (React Native Web & Expo SDK 57)"]
-        UI["App Interface (`frontend/src/App.js`)"]
+        UI["App Interface (frontend/src/App.js)"]
         Input["Candidate Word Input & Proposer"]
-        Card["Redacted Text Body (`█████████`)"]
+        Card["Redacted Text Body (█████████)"]
         Score["Live Score & Mistake Counter"]
     end
 
     subgraph Server_Layer["Backend API Service (Express.js 4.21 & Node.js 22)"]
-        Router["Game Route Handler (`backend/routes/gameRoutes.js`)"]
-        Engine["In-Memory Game Engine (`backend/game.js`)"]
+        Router["Game Route Handler (backend/routes/gameRoutes.js)"]
+        Engine["In-Memory Game Engine (backend/game.js)"]
         Normalizer["Turkish Unicode & Diacritics Normalizer"]
-        Masker["Regex Token Masker (`masquerTexte`)"]
-        SessionStore["In-Memory Session Store<br/>(24h TTL Autocleanup)"]
+        Masker["Regex Token Masker (masquerTexte)"]
+        SessionStore["In-Memory Session Store - 24h TTL Autocleanup"]
     end
 
     subgraph External_API["Wikimedia Foundation"]
-        Wiki["Wikipedia REST API<br/>(`api/rest_v1/page/random/summary`)"]
+        Wiki["Wikipedia REST API - api/rest_v1/page/random/summary"]
     end
 
     UI --> Input
